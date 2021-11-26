@@ -280,11 +280,3 @@ tr td button i {
   }
 }
 </style>
-
- /* td button *{
-    display: flex;
-  }
-  td button i{
-    justify-content: center;
-    margin-bottom: 10px;
-  } */

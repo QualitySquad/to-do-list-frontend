@@ -2,7 +2,7 @@ const button = document.getElementById('hamburguer');
 
 
 function teste(){
-    const container = document.getElementById('container-menu');
+    const container = document.getElementById('menu');
     container-menu.classList.toggle('active');
 }
 
