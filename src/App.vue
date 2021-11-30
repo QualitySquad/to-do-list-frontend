@@ -26,10 +26,6 @@ export default {
   list-style: none;
   font-family: 'Roboto', sans-serif;
 }
-body {
-  background-image: url('./assets/img/bg.jpg');
-  background-size: cover;
-}
 
 
 </style>

@@ -88,7 +88,7 @@ export default {
   margin-right: 10px;
 }
 
-@media screen and (min-width: 1000px) {
+@media screen and (min-width: 1100px) {
   #menu {
     display: block !important;
   }
@@ -100,7 +100,7 @@ export default {
   }
 }
 
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 1100px) {
   #menu {
     display: none;
   }
