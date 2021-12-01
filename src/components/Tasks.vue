@@ -3,29 +3,29 @@
     <GetData />
     <div class="inputs">
       <div class="addtask">
-      <input
-        class="inputTask"
-        type="text"
-        v-model="input.task"
-        v-on:keyup.enter="postTasks()"
-        placeholder="Adicione uma nova tarefa"
-      />
-    </div>
-    <div class="busca">
-      <input
-        class="buscaTask"
-        type="search"
-        v-model="busca"
-        placeholder="Busque por uma tarefa"
-      />
-    </div>
+        <input
+          class="inputTask"
+          type="text"
+          v-model="input.task"
+          v-on:keyup.enter="postTasks()"
+          placeholder="Adicione uma nova tarefa"
+        />
+      </div>
+      <div class="busca">  
+        <input
+          class="buscaTask"
+          type="search"
+          v-model="search"
+          placeholder="Busque por uma tarefa"
+        />
+      </div>
     </div>
     <table>
       <thead>
         <tr class="title">
           <th>#</th>
           <th>
-            <i class="fas fa-sort-alpha-down" @click="ordemTarefas()"></i>
+            <i class="fas fa-sort-alpha-down" @click="orderTasks()"></i>
             Tarefas
           </th>
           <th>Ações</th>
@@ -33,16 +33,31 @@
       </thead>
 
       <tbody>
-        <tr v-for="tarefas in ordemAlfabetica" :key="tarefas.id">
-          <td class="checkbox"><input type="checkbox" :value="tarefas" v-model="allSelected" @change="selectCheckbox()"/></td>
+        <tr v-for="tarefas in alphabeticalOrder" :key="tarefas.id">
+          <td class="checkbox">
+            <input
+              type="checkbox"
+              :value="tarefas"
+              v-model="allSelected"
+              @change="selectCheckbox()"
+            />
+          </td>
           <td
             class="descricao"
             :class="{ testandoCor: tarefas.finalizado == 1 }"
           >
-            <span><input class="checkboxMobile" type="checkbox" /> {{ tarefas.task }}</span>
+            <span
+              ><input
+                class="checkboxMobile"
+                type="checkbox"
+                :value="tarefas"
+                v-model="allSelected"
+                @change="selectCheckbox()"
+              />
+              {{ tarefas.task }}</span
+            >
           </td>
           <td>
-            
             <button @click.prevent="putTasks(tarefas)">
               <i class="far fa-edit"></i>Editar
             </button>
@@ -51,10 +66,10 @@
             </button>
             <button
               v-if="tarefas.finalizado === false"
-              @click.prevent="finalizarTasks(tarefas)"
+              @click.prevent="finishTasks(tarefas)"
             >
               <i class="far fa-check-circle"></i>Finalizar
-            </button>   
+            </button>
           </td>
         </tr>
       </tbody>
@@ -62,7 +77,9 @@
 
     <div class="botoes">
       <div>
-        <button @click="selectAll()"><i class="fas fa-check-double"></i>Selecionar Todos</button>
+        <button @click="selectAll()">
+          <i class="fas fa-check-double"></i>Selecionar Todos
+        </button>
         <button @click="finalizarSelecionados()">
           <i class="far fa-check-circle"></i>Finalizar Selecionados
         </button>
@@ -76,23 +93,22 @@ import AxiosGet from "../service/getTask";
 import AxiosPost from "../service/postTask";
 import AxiosPut from "../service/putTask";
 import AxiosDelete from "../service/deleteTask";
-import GetData from './GetData.vue'
+import GetData from "./GetData.vue";
 
 export default {
   name: "Tasks",
   components: {
-    GetData
+    GetData,
   },
   data() {
     return {
-      teste: null,
-      busca: null,
+      search: null,
       data: [
-        {
+          {
           id: [],
           task: [],
           finalizado: [],
-        },
+          },
       ],
       sortBy: "task",
       sortDirection: "",
@@ -108,6 +124,7 @@ export default {
       selected: [],
       allSelected: [],
       selecionados: [],
+      ordena: -1,
     };
   },
 
@@ -116,26 +133,33 @@ export default {
   },
 
   computed: {
-    ordemAlfabetica: function () {
-      if (this.busca != null) {
+    alphabeticalOrder: function () { 
+      if (this.search !== null) {
         return this.data.filter((tasks) => {
-          return tasks.task.match(this.busca);
+          return tasks.task.match(this.search);
         });
-      } else {
+      } 
+      return this.data
+    },
+  },
+  watch: {
+    ordena() {
+      if (this.ordena >= 0){
         return this.data.sort((p1, p2) => {
           let modifier = 1;
           if (this.sortDirection === "desc") modifier = -1;
-          if (p1[this.sortBy] < p2[this.sortBy]) return -1 * modifier;
-          if (p1[this.sortBy] > p2[this.sortBy]) return 1 * modifier;
+          if (p1[this.sortBy].toLowerCase() < p2[this.sortBy].toLowerCase()) return -1 * modifier;
+          if (p1[this.sortBy].toLowerCase() > p2[this.sortBy].toLowerCase()) return 1 * modifier;
           return 0;
         });
       }
-    },
-  },
+    }
 
+  },
   methods: {
-    async ordemTarefas() {
-      if (this.sortDirection === "") {
+    async orderTasks() {
+      this.ordena += 1;
+      if (this.sortDirection == "") {
         this.sortDirection = "asc";
       } else if (this.sortDirection === "asc") {
         this.sortDirection = "desc";
@@ -160,7 +184,7 @@ export default {
         task.task = this.input.task;
         console.log(task.task);
         await AxiosPut.putTask(task);
-        this.limpaEditInput();
+        this.clearEditInput();
         await this.getTasks();
       } else {
         const task = {
@@ -186,7 +210,7 @@ export default {
       await this.getTasks();
     },
 
-    limpaEditInput() {
+    clearEditInput() {
       this.editInput = {
         id: null,
         task: null,
@@ -194,46 +218,45 @@ export default {
       };
     },
 
-    async finalizarTasks(tarefas) {
+    async finishTasks(tarefas) {
       let task;
       if (tarefas.finalizado === false) {
         task = {
           id: tarefas.id,
           task: tarefas.task,
           finalizado: 1,
-      };
+        };
       }
       await AxiosPut.putTask(task);
       await this.getTasks();
     },
+    selectCheckbox() {
+      this.selecionados = this.allSelected;
+    },
     selectAll() {
-        this.allSelected = true;
-        let selecionados = this.selecionados;
-        this.ordemAlfabetica.forEach(tasks => {
-          if(tasks.finalizado == false) {
-            selecionados.push({
-              id: tasks.id ,
-              task: tasks.task,
-              finalizado: tasks.finalizado,
-            })
-          }          
-        });
+      this.allSelected = true;
+      let selecionados = this.selecionados;
+      this.alphabeticalOrder.forEach((tasks) => {
+        if (tasks.finalizado == false) {
+          selecionados.push({
+            id: tasks.id,
+            task: tasks.task,
+            finalizado: tasks.finalizado,
+          });
+        }
+      });
     },
     async finalizarSelecionados() {
-      // console.log(selecionados)
       this.selecionados.forEach(async (selecionado) => {
         selecionado = {
-          ...selecionado, 
-          finalizado: 1
-        }
-        await AxiosPut.putTask(selecionado)
+          ...selecionado,
+          finalizado: 1,
+        };
+        await AxiosPut.putTask(selecionado);
       });
-      await this.getTasks()
-      this.allSelected = false
+      await this.getTasks();
+      this.allSelected = [];
     },
-    selectCheckbox(tasks) {
-      
-    }
   },
 };
 </script>
@@ -289,11 +312,13 @@ th {
   margin-top: 10px;
 }
 
-input[type="text"], input[type="search"] {
-  border: 1px solid rgba(165, 70, 70, 0.212)
+input[type="text"],
+input[type="search"] {
+  border: 1px solid rgba(165, 70, 70, 0.212);
 }
-input[type="text"]:hover, input[type="search"]:hover {
-  border: 1px solid rgba(73, 51, 51, 0.555)
+input[type="text"]:hover,
+input[type="search"]:hover {
+  border: 1px solid rgba(73, 51, 51, 0.555);
 }
 
 .checkboxMobile {
@@ -338,8 +363,8 @@ tr td button i {
 }
 
 @media screen and (max-width: 1240px) {
-  .container {
-    margin: 2% 0 0 18%;
+  .buscaTask {
+    margin-left: 40%;
   }
   .checkbox {
     padding: 2px 0px 2px 30px;
@@ -350,15 +375,28 @@ tr td button i {
 }
 @media screen and (max-width: 1100px) {
   .container {
-    margin: 3% 0 0 0;
+    margin: 3% 0 0 15px;
   }
 }
 @media screen and (max-width: 855px) {
   .container {
     margin: 7% 0 0 5%;
   }
-  .title, .checkbox {
+
+  .inputs {
+    display: block;
+  }
+
+  .inputTask, .buscaTask {
+    max-width: 450px;
+  }
+
+  .title,
+  .checkbox {
     display: none;
+  }
+  .checkboxMobile {
+    display: table-cell;
   }
   td {
     padding: 2px 0 0 0;
@@ -368,9 +406,18 @@ tr td button i {
     text-align: left;
     width: 100%;
   }
-  .inputTask, .buscaTask {
+  .inputTask,
+  .buscaTask {
     width: 100%;
     margin: 0 0 35px;
+  }
+}
+@media screen and (max-width: 464px) {
+  .container {
+  max-width: 330px;
+  }
+  .descricao {
+  max-width: 330px;
   }
 }
 </style>
