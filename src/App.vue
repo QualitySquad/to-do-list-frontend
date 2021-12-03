@@ -18,6 +18,7 @@ export default {
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -28,8 +29,6 @@ export default {
   border: none;
 }
 body {
-  /* background-image: url('./assets/img/bg.png');
-  background-size: initial; */
   background:
     linear-gradient(
       rgba(255, 255, 255, 0.137),rgba(255, 255, 255, 0.137)

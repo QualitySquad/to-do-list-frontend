@@ -1,8 +1,6 @@
 <template>
   <div class="getData">
-    <h2 id="dataAtual"></h2>
-    <h3>O que temos para hoje? </h3>
-    
+    <h2 id="dataAtual"></h2>   
   </div>
 </template>
 
@@ -49,20 +47,14 @@ export default {
   },
 };
 </script>
-
 <style scoped>
 .getData {
   margin-left: 3px;
 }
-
 h2 {
   color: #000000;
-  margin-bottom: 25px;
+  margin: 80px 0 25px 0;
 }
-h3 {
-  margin: 15px 0 5px 0;
-}
-
 @media screen and (max-width: 855px){
   .getData{
     margin: 5px 0 15px 0;

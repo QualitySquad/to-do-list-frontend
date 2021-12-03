@@ -7,15 +7,15 @@
       <div class="logo">
         <img src="../assets/img/logo.png" alt="" />
       </div>
-      <div class="links">
+      <div class="links" @click="finishTasks()">
         <div>
           <router-link to="/"><i class="fas fa-tasks"></i>Tarefas</router-link>
         </div>
-        <div>
-          <router-link to="/"><i class="fas fa-users"></i>Sobre</router-link>
+        <div @click="finishTasks()">
+          <router-link to="/"><i class="far fa-check-circle"></i>Finalizadas</router-link>
         </div>
         <div>
-          <router-link to="/"><i class="fas fa-users"></i>Equipe</router-link>
+          <router-link to="/"><i class="fas fa-users"></i>Sobre</router-link>
         </div>
       </div>
     </div>
@@ -25,20 +25,24 @@
 <script>
 export default {
   name: "NavBar",
+  verifica: "block",
   methods: {
     teste() {
       const menu = document.getElementById("menu");
       const btn = document.getElementById('iconeBotao')
       const verifica = menu.style.display;
-      console.log(verifica);
+      this.verifica = verifica;
+      console.log(this.verifica)
       if (verifica == "none" || !verifica) {
         menu.style.display = "block";
-        btn.style.margin = "15px 0 0 90px"
-        btn.style.color = "#fff"
+        btn.classList.replace('fa-bars', 'fa-times');
+        btn.style.marginLeft = "160px"
+        btn.style.color = "#000"
       } else {
         menu.style.display = "none";
-        btn.style.margin = "15px 0 0 10px"
-        btn.style.color = "#2a343b"
+        btn.classList.replace('fa-times', 'fa-bars');
+        btn.style.marginLeft = "10px"
+        btn.style.color = "#fff"
       }
     },
   },
@@ -47,31 +51,33 @@ export default {
 
 <style scoped>
 #menu {
+  display: none;
   position: fixed;
   top: 0;
   left: 0;
   height: 100%;
   width: 150px;
-  background: #2a343b;
+  background: #c8e1ff;
   z-index: 100;
   transition: all 0.5s ease;
 }
 
 #btn {
-  display: none;
+  display: block;
 }
 
 #btn i {
-  position: relative;
-  font-size: 50px;
-  color: #2a343b;
+  position: fixed;
+  font-size: 40px;
+  top: 5px;
+  color: #fff;
   z-index: 1001;
-  margin: 15px 0 0 10px;
+  margin-left: 10px;
   cursor: pointer;
 }
 .logo img {
-  width: 140px;
-  margin: 25px 0 25px 7px;
+  width: 120px;
+  margin: 0px 0 25px 7px;
 }
 .links div {
   margin: 10px 0 0 5px;
@@ -80,40 +86,15 @@ export default {
 }
 
 .links div:hover {
-  background-color: #191d20;
+  background-color: #fff;
 }
 
 .links div a {
   font-size: 17px;
-  color: #fff;
+  color: #000;
 }
 .links div i {
   margin-right: 10px;
-}
-
-@media screen and (min-width: 1100px) {
-  #menu {
-    display: block !important;
-  }
-  #menu .logo {
-    margin-top: 0;
-  }
-  #btn {
-    display: none;
-  }
-}
-
-@media screen and (max-width: 1100px) {
-  #menu {
-    display: none;
-  }
-  #menu .logo {
-    margin-top: 60px;
-  }
-  #btn {
-    display: block;
-  }
-
 }
 
 </style>

@@ -1,88 +1,91 @@
 <template>
-  <div class="container">
-    <GetData @emitindoEventoFilhoParaPai="search"/>
-    <div class="inputs">
-      <div class="addtask">
-        <input
-          class="inputTask"
-          type="text"
-          v-model="input.task"
-          v-on:keyup.enter="postTasks()"
-          placeholder="+   Adicione uma tarefa"
-        />
-      </div>
-      <div class="busca">  
-        <input
-          class="buscaTask"
-          type="search"
-          v-model="search"
-          placeholder="Busque por uma tarefa"
-        />
-      </div>
+  <div class="main">
+    <div class="busca">
+      <input
+        class="buscaTask"
+        type="search"
+        v-model="search"
+        placeholder="O que você procura?"
+      />
     </div>
-    <table>
-      <thead>
-        <tr class="title">
-          <th>#</th>
-          <th>
-            <i class="fas fa-sort-alpha-down" @click="orderTasks()"></i>
-            Tarefas
-          </th>
-          <th>Ações</th>
-        </tr>
-      </thead>
 
-      <tbody>
-        <tr v-for="tarefas in alphabeticalOrder" :key="tarefas.id">
-          <td class="checkbox">
-            <input
-              type="checkbox"
-              :value="tarefas"
-              v-model="allSelected"
-              @change="selectCheckbox()"
-            />
-          </td>
-          <td
-            class="descricao"
-            :class="{ testandoCor: tarefas.finalizado == 1 }"
-          >
-            <span
-              ><input
-                class="checkboxMobile"
+    <div class="container">
+      <GetData/>
+      <div class="inputs">
+        <div class="addtask">
+          <input
+            class="inputTask"
+            type="text"
+            v-model="input.task"
+            v-on:keyup.enter="postTasks()"
+            placeholder="+   Adicione uma tarefa"
+          />
+        </div>
+      </div>
+      <table class="table">
+        <thead>
+          <tr class="title">
+            <th>#</th>
+            <th class="titleTasks">
+              <i class="fas fa-sort-alpha-down" @click="orderTasks()"></i>
+              Tarefas
+            </th>
+            <th class="actions">Ações</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr v-for="tarefas in alphabeticalOrder" :key="tarefas.id">
+            <td class="checkbox">
+              <input
                 type="checkbox"
                 :value="tarefas"
                 v-model="allSelected"
                 @change="selectCheckbox()"
               />
-              {{ tarefas.task }}</span
+            </td>
+            <td
+              class="descricao"
+              :class="{ finishedTask: tarefas.finalizado == 1 }"
             >
-          </td>
-          <td>
-            <button @click.prevent="putTasks(tarefas)">
-              <i class="far fa-edit"></i>Editar
-            </button>
-            <button @click.prevent="deleteTasks(tarefas.id)">
-              <i class="far fa-trash-alt"></i>Excluir
-            </button>
-            <button
-              v-if="tarefas.finalizado === false"
-              @click.prevent="finishTasks(tarefas)"
-            >
-              <i class="far fa-check-circle"></i>Finalizar
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+              <span
+                ><input
+                  class="checkboxMobile"
+                  type="checkbox"
+                  :value="tarefas"
+                  v-model="allSelected"
+                  @change="selectCheckbox()"
+                />
+                {{ tarefas.task }}</span
+              >
+            </td>
+            <td>
+              <button @click.prevent="putTasks(tarefas)">
+                <i class="far fa-edit"></i>Editar
+              </button>
+              <button @click.prevent="deleteTasks(tarefas.id)">
+                <i class="far fa-trash-alt"></i>Excluir
+              </button>
+              <button
+                v-if="tarefas.finalizado === false"
+                @click.prevent="finishTasks(tarefas)"
+              >
+                <i class="far fa-check-circle"></i>Finalizar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-    <div class="botoes">
-      <div>
-        <button @click="selectAll()">
-          <i class="fas fa-check-double"></i> Selecionar Todos
-        </button>
-        <button @click="finalizarSelecionados()">
-          <i class="far fa-check-circle"></i> Finalizar Selecionados
-        </button>
+      <div class="botoes">
+        <div>
+          <button @click="selectAll()">
+            <i class="fas fa-check-double"></i> Selecionar Todos
+          </button>
+          <button @click="finalizarSelecionados()">
+            <i class="far fa-check-circle"></i> Finalizar Selecionados
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -104,11 +107,11 @@ export default {
     return {
       search: null,
       data: [
-          {
+        {
           id: [],
           task: [],
           finalizado: [],
-          },
+        },
       ],
       sortBy: "task",
       sortDirection: "",
@@ -133,32 +136,32 @@ export default {
   },
 
   computed: {
-    alphabeticalOrder: function () { 
+    alphabeticalOrder: function () {
       if (this.search !== null) {
         return this.data.filter((tasks) => {
           return tasks.task.match(this.search);
         });
-      } 
-      return this.data
+      }
+      return this.data;
     },
   },
   watch: {
     ordena() {
-      if (this.ordena >= 0){
+      if (this.ordena >= 0) {
         return this.data.sort((p1, p2) => {
           let modifier = 1;
           if (this.sortDirection === "desc") modifier = -1;
-          if (p1[this.sortBy].toLowerCase() < p2[this.sortBy].toLowerCase()) return -1 * modifier;
-          if (p1[this.sortBy].toLowerCase() > p2[this.sortBy].toLowerCase()) return 1 * modifier;
+          if (p1[this.sortBy].toLowerCase() < p2[this.sortBy].toLowerCase())
+            return -1 * modifier;
+          if (p1[this.sortBy].toLowerCase() > p2[this.sortBy].toLowerCase())
+            return 1 * modifier;
           return 0;
         });
       }
-    }
-
+    },
   },
   methods: {
-
-    getSomeData(data){
+    getSomeData(data) {
       this.search = data;
     },
 
@@ -267,18 +270,80 @@ export default {
 </script>
 
 <style scoped>
-.testandoCor {
-  background-color: rgba(21, 226, 89, 0.616);
+
+.main {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
 }
+
+.busca {
+  position: fixed;
+  width: 100%;
+  height: 50px;
+  top: 0;
+  background-color: #004aad;
+}
+
+.buscaTask {
+  position: fixed;
+  top: 5.5px;
+  right: -50%;
+  left: -50%;
+  margin: 0 auto; 
+  width: 35%;
+  height: 38px;
+  padding: 5px 15px;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 5px;
+}
+
+.container {
+  margin-top: 2%;
+  width: 100%;
+  max-width: 850px;
+}
+
+.inputTask {
+  width: 99%;
+  height: 38px;
+  padding: 5px 15px;
+  font-size: 18px;
+  font-weight: 700;
+  border: 1px solid rgba(36, 36, 36, 0.212);
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
+
+input[type="text"],
+input[type="search"] {
+  border: 1px solid rgba(3, 3, 3, 0.24);
+  font-weight: 500;
+}
+
+input[type="text"]::placeholder,
+input[type="search"]::placeholder {
+  color: rgba(105, 105, 105, 0.562);
+}
+
+input[type="text"]:hover,
+input[type="search"]:hover {
+  border: 1px solid rgba(0, 217, 255, 0.555);
+}
+
+.finishedTask {
+  background-color: #38b6ff;
+}
+
 .fa-sort-alpha-down {
   cursor: pointer;
 }
 
-.container {
-  margin: 2% 0 0 20%;
-  max-width: 850px;
-  width: 100%;
-  align-items: center;
+.descricao {
+  width: 450px;
+  border-radius: 7px;
 }
 
 th {
@@ -286,63 +351,22 @@ th {
   text-align: left;
   padding-left: 30px;
   font-size: 20px;
-  color: #00c4cc;
-}
-/* aaaaaaaaaaaaaaaaa */
-/* table {
-  background-color: rgba(255, 255, 255, 0.795);
-  border-radius: 10px;
-} */
-
-.inputs {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 625px;
-}
-
-.inputTask {
-  width: 100%;
-  height: 38px;
-  padding: 5px 15px;
-  font-size: 18px;
-  font-weight: 700;
-  border: 1px solid rgba(36, 36, 36, 0.212);
-  margin: 10px 15px 50px 3px;
-}
-
-.buscaTask {
-  width: 100%;
-  margin-left: 53%;
-  height: 38px;
-  padding: 5px 15px;
-  font-size: 18px;
-  font-weight: 700;
-  border: 1px solid rgba(36, 36, 36, 0.212);
-  margin-top: 10px;
-}
-
-input[type="text"],
-input[type="search"] {
-  border: 1px solid rgba(165, 70, 70, 0.212);
-}
-input[type="text"]:hover,
-input[type="search"]:hover {
-  border: 1px solid rgba(73, 51, 51, 0.555);
+  color: #000000;
 }
 
 .checkboxMobile {
   display: none;
 }
 
-.descricao {
-  width: 100%;
-  width: 450px;
-}
-
 table {
   margin-bottom: 15px;
-  border-bottom: 1px solid rgba(36, 36, 36, 0.575);
+  background-color: #fff;
+}
+
+.table {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 1px 1px 10px 5px rgba(0, 0, 0, 0.39);
 }
 
 table,
@@ -366,11 +390,7 @@ button {
   color: #ffffff;
   font-weight: 400;
   box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.39);
-  /* background-color: transparent; */
-  background-color: #9a58b6;
-}
-button:hover {
-  box-shadow: 2px 2px 2px 1px rgba(16, 117, 134, 0.63);
+  background-color: #004aad;
 }
 
 tr td button i {
@@ -380,50 +400,30 @@ tr td button i {
 /* Botões "Editar", "Excluir" e "Finalizar" */
 
 .fa-trash-alt {
-  color: #ff0000;
+  color: #ffffff;
 }
 .fa-check-circle {
-  color: #004d00;
+  color: #ffffff;
 }
 
 /* fim */
 
-
-@media screen and (max-width: 1240px) {
-  .buscaTask {
-    margin-left: 40%;
-  }
-  .checkbox {
-    padding: 2px 0px 2px 30px;
-  }
-  .descricao {
-    padding-right: 0;
-  }
-}
-@media screen and (max-width: 1100px) {
+@media screen and (max-width: 880px) {
   .container {
-    margin: 3% 0 0 15px;
-  }
-}
-@media screen and (max-width: 855px) {
-  .container {
-    margin: 7% 0 0 5%;
-  }
-
-  .inputs {
-    display: block;
-  }
-
-  .inputTask, .buscaTask {
     max-width: 450px;
   }
-
-  .title,
-  .checkbox {
-    display: none;
+  .buscaTask {
+    width: 55%;
   }
-  .checkboxMobile {
-    display: table-cell;
+  .descricao {
+    border-radius: 0;
+  }
+  tr {
+    border-bottom: 1px solid black;
+  }
+  table,
+  td {
+  border-top: none;
   }
   td {
     padding: 2px 0 0 0;
@@ -433,18 +433,31 @@ tr td button i {
     text-align: left;
     width: 100%;
   }
-  .inputTask,
-  .buscaTask {
-    width: 100%;
-    margin: 0 0 35px;
+  td button {
+    margin: 5px 0 10px 15px;
+  }
+  .inputs {
+    display: block;
+  }
+   .title,
+  .checkbox {
+    display: none;
+  }
+  .checkboxMobile {
+    display: table-cell;
+    margin: 20px;
   }
 }
 @media screen and (max-width: 464px) {
   .container {
-  max-width: 330px;
+    max-width: 300px;
   }
   .descricao {
-  max-width: 330px;
+    max-width: 300px;
   }
+  .botoes button {
+    width: 100%;
+  }
+
 }
 </style>
