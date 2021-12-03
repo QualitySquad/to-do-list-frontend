@@ -2,6 +2,7 @@
   <div class="getData">
     <h2 id="dataAtual"></h2>
     <h3>O que temos para hoje? </h3>
+    
   </div>
 </template>
 
@@ -9,12 +10,21 @@
 export default {
   name: "GetData",
   data() {
-    return {};
+    return {
+      opa: "",
+    };
   },
   mounted() {
     this.getData()
   },
   methods: {
+
+    returnSomeData(data){
+      this.$emit('emitindoEventoFilhoParaPai', this.opa)
+    },
+
+
+
     getData() {
       let data = new Date();
       
@@ -46,7 +56,7 @@ export default {
 }
 
 h2 {
-  color: #00c4cc;
+  color: #000000;
   margin-bottom: 25px;
 }
 h3 {

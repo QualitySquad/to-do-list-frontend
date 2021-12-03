@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <GetData />
+    <GetData @emitindoEventoFilhoParaPai="search"/>
     <div class="inputs">
       <div class="addtask">
         <input
@@ -8,7 +8,7 @@
           type="text"
           v-model="input.task"
           v-on:keyup.enter="postTasks()"
-          placeholder="Adicione uma nova tarefa"
+          placeholder="+   Adicione uma tarefa"
         />
       </div>
       <div class="busca">  
@@ -78,10 +78,10 @@
     <div class="botoes">
       <div>
         <button @click="selectAll()">
-          <i class="fas fa-check-double"></i>Selecionar Todos
+          <i class="fas fa-check-double"></i> Selecionar Todos
         </button>
         <button @click="finalizarSelecionados()">
-          <i class="far fa-check-circle"></i>Finalizar Selecionados
+          <i class="far fa-check-circle"></i> Finalizar Selecionados
         </button>
       </div>
     </div>
@@ -157,6 +157,11 @@ export default {
 
   },
   methods: {
+
+    getSomeData(data){
+      this.search = data;
+    },
+
     async orderTasks() {
       this.ordena += 1;
       if (this.sortDirection == "") {
@@ -283,6 +288,11 @@ th {
   font-size: 20px;
   color: #00c4cc;
 }
+/* aaaaaaaaaaaaaaaaa */
+/* table {
+  background-color: rgba(255, 255, 255, 0.795);
+  border-radius: 10px;
+} */
 
 .inputs {
   display: flex;
@@ -332,12 +342,12 @@ input[type="search"]:hover {
 
 table {
   margin-bottom: 15px;
-  border-bottom: 1px solid rgba(36, 36, 36, 0.212);
+  border-bottom: 1px solid rgba(36, 36, 36, 0.575);
 }
 
 table,
 td {
-  border-top: 1px solid rgba(36, 36, 36, 0.212);
+  border-top: 1px solid rgba(36, 36, 36, 0.575);
   border-collapse: collapse;
   padding: 2px 30px 2px 30px;
   position: relative;
@@ -348,19 +358,36 @@ td {
   justify-content: space-between;
 }
 
-tr td button,
-.botoes button {
+button {
+  border-radius: 5px;
   padding: 10px;
   margin: 5px 5px 5px 0;
   cursor: pointer;
-  color: black;
-  border: 1px solid rgba(0, 0, 0, 0.329);
-  background-color: transparent;
+  color: #ffffff;
+  font-weight: 400;
+  box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.39);
+  /* background-color: transparent; */
+  background-color: #9a58b6;
+}
+button:hover {
+  box-shadow: 2px 2px 2px 1px rgba(16, 117, 134, 0.63);
 }
 
 tr td button i {
   margin-right: 7px;
 }
+
+/* Botões "Editar", "Excluir" e "Finalizar" */
+
+.fa-trash-alt {
+  color: #ff0000;
+}
+.fa-check-circle {
+  color: #004d00;
+}
+
+/* fim */
+
 
 @media screen and (max-width: 1240px) {
   .buscaTask {

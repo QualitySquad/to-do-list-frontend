@@ -12,6 +12,9 @@
           <router-link to="/"><i class="fas fa-tasks"></i>Tarefas</router-link>
         </div>
         <div>
+          <router-link to="/"><i class="fas fa-users"></i>Sobre</router-link>
+        </div>
+        <div>
           <router-link to="/"><i class="fas fa-users"></i>Equipe</router-link>
         </div>
       </div>
@@ -30,7 +33,7 @@ export default {
       console.log(verifica);
       if (verifica == "none" || !verifica) {
         menu.style.display = "block";
-        btn.style.margin = "15px 0 0 150px"
+        btn.style.margin = "15px 0 0 90px"
         btn.style.color = "#fff"
       } else {
         menu.style.display = "none";
@@ -48,7 +51,7 @@ export default {
   top: 0;
   left: 0;
   height: 100%;
-  width: 220px;
+  width: 150px;
   background: #2a343b;
   z-index: 100;
   transition: all 0.5s ease;
@@ -67,7 +70,7 @@ export default {
   cursor: pointer;
 }
 .logo img {
-  width: 200px;
+  width: 140px;
   margin: 25px 0 25px 7px;
 }
 .links div {
@@ -81,7 +84,7 @@ export default {
 }
 
 .links div a {
-  font-size: 25px;
+  font-size: 17px;
   color: #fff;
 }
 .links div i {
