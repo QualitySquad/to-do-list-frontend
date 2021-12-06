@@ -56,8 +56,8 @@ Isso acontece graças à fácil integração de um novo colaborador ao um projet
 
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/matheusaugusto61"><img style="border-radius: 50%;" src="https://avatars.githubusercontent.com/u/89614624?v=4" width="350px;" alt=""/><br /><sub><b>Matheus Augusto</b></sub></a><br />Backend Developer🚀<br /><a href="https://www.linkedin.com/in/matheus-augusto-2019/"><sub>Linkedin</sub></a></td>
     <td align="center"><a href="https://github.com/israelgms"><img style="border-radius: 50%;" src="https://avatars.githubusercontent.com/u/71859464?v=4" width="350px;" alt=""/><br /><sub><b>Israel Gomes</b></sub></a><br />Frontend Developer🚀<br /><a href="https://www.linkedin.com/in/israel-gomes-04407718b/"><sub>Linkedin</sub></a></td>
+    <td align="center"><a href="https://github.com/matheusaugusto61"><img style="border-radius: 50%;" src="https://avatars.githubusercontent.com/u/89614624?v=4" width="350px;" alt=""/><br /><sub><b>Matheus Augusto</b></sub></a><br />Backend Developer🚀<br /><a href="https://www.linkedin.com/in/matheus-augusto-2019/"><sub>Linkedin</sub></a></td>
   </tr>
 </table>
 
