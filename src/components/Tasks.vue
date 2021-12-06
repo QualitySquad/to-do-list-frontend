@@ -1,4 +1,6 @@
 <template>
+  <div>
+  <NavBar @finishedTasks="finishedTasks()" @allTasks="getTasks()" />
   <div class="main">
     <div class="busca">
       <input
@@ -22,10 +24,18 @@
           />
         </div>
       </div>
+
+      <Message :msg="msg" v-show="msg" />
+
+    <div class="mobileOptions">
+      <button @click="orderTasks()"><i class="fas fa-sort-alpha-down" > Ordenar</i></button>
+      <button @click="getTasks()"><i class="fas fa-sync"></i> Recarregar</button>
+    </div>
+
       <table class="table">
         <thead>
           <tr class="title">
-            <th>#</th>
+            <th><i class="fas fa-sync" @click="getTasks()"></i></th>
             <th class="titleTasks">
               <i class="fas fa-sort-alpha-down" @click="orderTasks()"></i>
               Tarefas
@@ -35,7 +45,7 @@
         </thead>
 
         <tbody>
-          <tr v-for="tarefas in alphabeticalOrder" :key="tarefas.id">
+          <tr v-for="tarefas in computedData" :key="tarefas.id">
             <td class="checkbox">
               <input
                 type="checkbox"
@@ -89,6 +99,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -97,11 +108,15 @@ import AxiosPost from "../service/postTask";
 import AxiosPut from "../service/putTask";
 import AxiosDelete from "../service/deleteTask";
 import GetData from "./GetData.vue";
+import NavBar from "./NavBar.vue";
+import Message from "./Message.vue";
 
 export default {
   name: "Tasks",
   components: {
+    NavBar,
     GetData,
+    Message,
   },
   data() {
     return {
@@ -128,6 +143,7 @@ export default {
       allSelected: [],
       selecionados: [],
       ordena: -1,
+      msg: "",
     };
   },
 
@@ -136,7 +152,7 @@ export default {
   },
 
   computed: {
-    alphabeticalOrder: function () {
+    computedData: function () {
       if (this.search !== null) {
         return this.data.filter((tasks) => {
           return tasks.task.match(this.search);
@@ -161,8 +177,11 @@ export default {
     },
   },
   methods: {
-    getSomeData(data) {
-      this.search = data;
+    finishedTasks() {
+        let finishedTasks = this.data.filter((tasks) => {
+          return tasks.finalizado === true;
+        });
+        return this.data = finishedTasks;
     },
 
     async orderTasks() {
@@ -179,10 +198,10 @@ export default {
     async getTasks() {
       const res = await AxiosGet.getTask();
       const task = res.data;
-      this.insertData(task);
+      await this.insertData(task);
     },
 
-    insertData(data) {
+    async insertData(data) {
       this.data = data;
     },
 
@@ -194,6 +213,8 @@ export default {
         await AxiosPut.putTask(task);
         this.clearEditInput();
         await this.getTasks();
+        this.msg = 'Tarefa editada com sucesso!';
+        setTimeout(() => (this.msg = ""), 3000);
       } else {
         const task = {
           task: this.input.task,
@@ -216,6 +237,8 @@ export default {
     async deleteTasks(id) {
       await AxiosDelete.deleteTask(id);
       await this.getTasks();
+      this.msg = 'Tarefa excluida com sucesso!';
+      setTimeout(() => (this.msg = ""), 3000);
     },
 
     clearEditInput() {
@@ -236,6 +259,8 @@ export default {
         };
       }
       await AxiosPut.putTask(task);
+      this.msg = 'Tarefa finalizada com sucesso!';
+      setTimeout(() => (this.msg = ""), 3000);
       await this.getTasks();
     },
     selectCheckbox() {
@@ -244,7 +269,7 @@ export default {
     selectAll() {
       this.allSelected = true;
       let selecionados = this.selecionados;
-      this.alphabeticalOrder.forEach((tasks) => {
+      this.computedData.forEach((tasks) => {
         if (tasks.finalizado == false) {
           selecionados.push({
             id: tasks.id,
@@ -261,8 +286,10 @@ export default {
           finalizado: 1,
         };
         await AxiosPut.putTask(selecionado);
+        await this.getTasks();
       });
-      await this.getTasks();
+      this.msg = 'Tarefas finalizadas com sucesso!';
+      setTimeout(() => (this.msg = ""), 3000);
       this.allSelected = [];
     },
   },
@@ -270,7 +297,6 @@ export default {
 </script>
 
 <style scoped>
-
 .main {
   display: flex;
   width: 100%;
@@ -306,6 +332,10 @@ export default {
   max-width: 850px;
 }
 
+.mobileOptions {
+  display: none;
+}
+
 .inputTask {
   width: 99%;
   height: 38px;
@@ -337,7 +367,7 @@ input[type="search"]:hover {
   background-color: #38b6ff;
 }
 
-.fa-sort-alpha-down {
+.fa-sort-alpha-down, .fa-sync {
   cursor: pointer;
 }
 
@@ -398,20 +428,23 @@ tr td button i {
 }
 
 /* Botões "Editar", "Excluir" e "Finalizar" */
-
 .fa-trash-alt {
   color: #ffffff;
 }
 .fa-check-circle {
   color: #ffffff;
 }
-
 /* fim */
 
 @media screen and (max-width: 880px) {
   .container {
     max-width: 450px;
   }
+  .mobileOptions {
+    display: block;
+    margin-bottom: 5px;
+  }
+
   .buscaTask {
     width: 55%;
   }

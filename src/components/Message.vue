@@ -21,7 +21,7 @@
         border-radius: 5px;
         padding: 10px;
         max-width: 400px;
-        margin: 30px auto;
+        margin: 10px auto;
         text-align: center;
     }
 </style>

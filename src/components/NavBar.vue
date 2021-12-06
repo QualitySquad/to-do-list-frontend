@@ -1,17 +1,17 @@
 <template>
   <div>
     <div id="btn">
-      <i id="iconeBotao" class="fas fa-bars" @click="teste()"></i>
+      <i id="iconeBotao" class="fas fa-bars" @click="hamburger()"></i>
     </div>
     <div id="menu">
       <div class="logo">
         <img src="../assets/img/logo.png" alt="" />
       </div>
-      <div class="links" @click="finishTasks()">
-        <div>
+      <div class="links">
+        <div @click="emitTasks()">
           <router-link to="/"><i class="fas fa-tasks"></i>Tarefas</router-link>
         </div>
-        <div @click="finishTasks()">
+        <div @click="emitFinish()">
           <router-link to="/"><i class="far fa-check-circle"></i>Finalizadas</router-link>
         </div>
         <div>
@@ -27,12 +27,18 @@ export default {
   name: "NavBar",
   verifica: "block",
   methods: {
-    teste() {
+    emitTasks(){
+      this.$emit('allTasks')
+    },
+    emitFinish(){
+      this.$emit('finishedTasks')
+    },
+    
+    hamburger() {
       const menu = document.getElementById("menu");
       const btn = document.getElementById('iconeBotao')
       const verifica = menu.style.display;
       this.verifica = verifica;
-      console.log(this.verifica)
       if (verifica == "none" || !verifica) {
         menu.style.display = "block";
         btn.classList.replace('fa-bars', 'fa-times');
@@ -95,6 +101,10 @@ export default {
 }
 .links div i {
   margin-right: 10px;
+}
+
+button {
+  cursor: pointer;
 }
 
 </style>
